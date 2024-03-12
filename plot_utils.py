@@ -1,5 +1,4 @@
-#Authors: @riverseb, @dsanper
-import sys 
+#Authors: @riverseb, @dsanper086
 import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
@@ -7,18 +6,13 @@ import matplotlib.cm as cm
 from matplotlib.colors import Normalize
 import numpy as np
 import seaborn as sns
-# import plotly as plty
-#path = sys.argv[1] # input ZWP_DH.dat
 
 palette = sns.color_palette("Set2")
+# code for 3d scatter plot with color 
 def scatter3d_plot(df, x, y, z, c=None):
-    df_offset = df.iloc[::3]
-    fig = plt.figure(figsize=(6,5), dpi=300)
-    ax = plt.axes(projection='3d')
-    # ax_pos = [0.5, 0.5, 6, 6]
-    # ax = fig.add_axes(ax_pos)
-    #ax = Axes3D(fig)
-    # plt.subplots_adjust(top=0.05, bottom=0.04)
+    df_offset = df.iloc[::3] # offset by 3 frames
+    fig = plt.figure(figsize=(6,5), dpi=300) # generate matplotlib figure
+    ax = plt.axes(projection='3d') # generate 3d axes
     ax.set_xlabel(x, fontsize=20, rotation=-15, labelpad=13)
     ax.set_ylabel(y, fontsize=20, rotation=45)
     ax.set_zlabel(z, fontsize=20, labelpad=5, rotation=90)
@@ -30,12 +24,11 @@ def scatter3d_plot(df, x, y, z, c=None):
     ax.set_xlim(0, 380)
     ax.set_ylim(0, 380)
     ax.set_zlim(0, 380)
-    ax.view_init(elev=15, azim=-60)
+    ax.view_init(elev=15, azim=-60) # set viewing perspective
     ax.scatter(df_offset[x], df_offset[y], [0], color='gray')
-    # print(df[0])
-    norm_energy = Normalize(vmin=df[c].min(), vmax=df[c].max())
-    mappable = cm.ScalarMappable(norm=norm_energy, cmap=sns.color_palette("rocket", as_cmap=True))
-    mappable.set_array(df_offset[c])
+    norm_energy = Normalize(vmin=df[c].min(), vmax=df[c].max()) # normalize colormap
+    mappable = cm.ScalarMappable(norm=norm_energy, cmap=sns.color_palette("rocket", as_cmap=True)) # generate colormap
+    mappable.set_array(df_offset[c]) # set data array for colormapping
     
     if c is not None:
         fig.colorbar(mappable, label="Energy (kcal/mol)", ax=ax, pad=0.1, shrink=0.8)
@@ -47,6 +40,7 @@ def scatter3d_plot(df, x, y, z, c=None):
     fig.tight_layout()
     fig.savefig(f'{x} vs {y} vs {z}.png', dpi=300)
 
+# create line plot for a single metric vs time w/ matplotlib
 def metric_vs_time(df, column):
     plt.figure(figsize=(6,6))
     df_offset = df.iloc[::5]
@@ -58,17 +52,13 @@ def metric_vs_time(df, column):
     plt.ylabel("DH1")
     plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
     plt.savefig(f"{column}_vs_time.png", dpi=300)
+# create line plot for multiple metrics vs time w/ matplotlib and seaborn
 def line_multimetric_vs_time(df):
     fig = plt.figure(figsize=(10,6))
     df_subset = df.iloc[::5, 3:6]
     df_subset.insert(loc=0, column="Time", value=df["Frame"])
     df_subset.set_index("Time", inplace=True)
     ax = sns.lineplot(data=df_subset, palette="Set2")
-    
-    # i = 0
-    # for col in columns:
-    #     plt.plot(df_offset["Frame"], df_offset[col], linestyle='-', color=palette[i], linewidth=1, marker="", label=col)
-    #     i += 1
     plt.xlabel("Time (ns)", fontsize=20)
     plt.legend(fontsize=15, loc='lower left', ncol=3)
     ax.tick_params(axis='both', which='major', labelsize=15)
@@ -76,31 +66,4 @@ def line_multimetric_vs_time(df):
     plt.ylabel("Dihderal (º)", fontsize=20)
     # plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
     plt.savefig(f"DH1-3_vs_time_multi.png", dpi=300)
-def sns_multimetric_vs_time(df, *columns):
-    fig = plt.figure(figsize=(10,6))
-    df_offset = df.iloc[::5]
-    i = 0
-    for col in columns:
-        sns.lineplot(x="Frame", y=col, data=df_offset, color=palette[i])
-        i += 1
-    plt.xlabel("Time (ns)")
-    plt.legend(fontsize=15, loc='upper right', borderaxespad=5, mode="expand")
-    plt.xticks(rotation=45) # Only needed if X axis is overlapping
-    plt.ylabel("DH1")
-    plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
-    plt.savefig(f"{col}_vs_time_multi.png", dpi=300)
-# def plty_scatter3d(df, x, y, z, c):
 
-# def main(data_file, *args):
-#     df = pd.read_csv(data_file, delim_whitespace=True, header=0) #dataframe for data
-    
-
-
-
-
-
-# This script generates line plots for DH1 and DH2 vs time.
-# Usage:
-# 1. Call the script passing the file path of the dataset as the first command line argument.
-# 2. Meant to be used on ZWP_DH.dat file type.
-# 3. The script will automatically save the plots for the first and second data columns as 'time_DH1_line_plot.png' and 'time_DH2_line_plot.png' respectively in the current working directory.

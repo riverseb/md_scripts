@@ -1,3 +1,4 @@
+#Authors: @dsanper086
 import MDAnalysis as md
 import pandas as pd
 
