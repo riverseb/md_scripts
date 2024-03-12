@@ -1,0 +1,31 @@
+# for CitL_WT
+parm *.prmtop
+#trajin prod1.nc
+#trajin prod2.nc
+#trajin prod3.nc
+#trajin prod4.nc
+#trajin prod5 .nc
+#trajin prod6.nc
+#trajin prod7.nc
+#trajin prod8.nc
+#trajin prod9.nc
+#trajin prod10.nc
+trajin prod*.nc
+distance ZWP_ZWP1 :343@C5 :343@C3 
+distance ZWP_ZWP2 :343@C1 :343@C8 
+dihedral DH1 :343@C5 :343@C8 :343@C13 :343@C12 
+dihedral DH2 :343@C11 :343@C10 :343@C1 :343@N2
+distance ZWP_NAP1 :343@C9 :344@C13 
+run
+write NAP_dist.dat ZWP_NAP1
+write raw_metrics.dat DH1 DH2 ZWP_ZWP1 ZWP_ZWP2
+
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH1
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH2
+
+run
+write ZWP_DH.dat DH1 DH2
+strip :WAT,Na+
+trajout frames.nc offset 5
+trajout cords.nc
+run

@@ -1,0 +1,42 @@
+# for CitL_WT
+parm *.prmtop
+#trajin prod1.nc
+#trajin prod2.nc
+#trajin prod3.nc
+#trajin prod4.nc
+#trajin prod5 .nc
+#trajin prod6.nc
+#trajin prod7.nc
+#trajin prod8.nc
+#trajin prod9.nc
+#trajin prod10.nc
+trajin prod*.nc
+#time time0 0 df 50 
+distance ZWP_ZWP1 :344@C15 :344@C2 out raw_metrics.dat time 0.05
+distance ZWP_ZWP2 :344@C9 :344@C14 out raw_metrics.dat time 0.05
+dihedral DH1 :344@C12 :344@C13 :344@C14 :344@C15 out raw_metrics.dat time 0.05 range360
+dihedral DH2 :344@N3 :344@C9 :344@C10 :344@C11 out raw_metrics.dat time 0.05 range360
+dihedral DH3 :344@C14 :344@C13 :344@C12 :344@C11 out raw_metrics.dat time 0.05 range360
+distance ZWP_NAP1 :344@C8 :343@C13 out raw_metrics.dat time 0.05
+run
+energy E_DH1 :344@C12,C13,C14,C15 out raw_metrics.dat bond dihedral time 0.05
+run
+energy E_DH2 :344@N3,C9,C10,C11 out raw_metrics.dat time 0.05
+run
+energy E_DH3 :344@C14,C13,C12,C11 out raw_metrics.dat time 0.05
+run
+energy E_MPC :344 out raw_metrics.dat time 0.05
+run
+rmsd rmsd :344 first
+run
+# write raw_metrics.dat DH1 DH2 DH3 ZWP_ZWP1 ZWP_ZWP2 ZWP_NAP1 E_DH1 E_DH2 E_DH3 \
+# E_MPC rmsd #outputs raw_metrics.dat
+write NAP_dist.dat ZWP_NAP1
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH1
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH2
+run
+write NAC_DH.dat DH1 DH2 DH3 #outputs ZWP_DH.dat
+strip :WAT,Na+
+trajout frames.nc offset 5 #outputs frames.nc
+trajout cords.nc #outputs cords.nc
+run

@@ -1,0 +1,6 @@
+parm *.prmtop
+trajin min.nc
+trajin eq*.nc
+strip :WAT,Na+
+trajout min+eq.nc 
+run

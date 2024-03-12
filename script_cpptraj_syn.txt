@@ -1,0 +1,28 @@
+# for CitL_WT
+parm *.prmtop
+#trajin prod1.nc
+#trajin prod2.nc
+#trajin prod3.nc
+#trajin prod4.nc
+#trajin prod5 .nc
+#trajin prod6.nc
+#trajin prod7.nc
+#trajin prod8.nc
+#trajin prod9.nc
+#trajin prod10.nc
+trajin prod*.nc
+distance ZWP_ZWP1 :344@C5 :344@C3 
+distance ZWP_ZWP2 :344@C1 :344@C8 
+dihedral DH1 :344@C8 :344@C9 :344@C13 :344@C12 
+dihedral DH2 :344@C7 :344@C14 :344@C15 :344@N2 #the numeration on the syn ligand is different 
+distance ZWP_NAP1 :344@C18 :343@C13 
+run
+write NAP_dist.dat ZWP_NAP1
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH1
+filter ZWP_ZWP1 min 0 max 4 ZWP_ZWP2 min 0 max 4 filterset DH2
+run
+write ZWP_DH.dat DH1 DH2
+strip :WAT,Na+
+trajout frames.nc offset 5
+trajout cords.nc
+run
