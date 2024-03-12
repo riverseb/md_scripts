@@ -1,4 +1,4 @@
-# Written by: @riverseb
+# Authors: @riverseb
 import argparse
 from pymol import cmd, finish_launching
 import subprocess

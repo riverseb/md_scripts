@@ -1,4 +1,4 @@
-#Authors: @dsanper086
+#Authors: @Daniel-Chem
 import matplotlib.pyplot as plt
 import pandas as pd
 

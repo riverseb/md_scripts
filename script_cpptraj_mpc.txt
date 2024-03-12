@@ -1,4 +1,4 @@
-# for CitL_WT
+# cpptraj input script
 parm *.prmtop
 #trajin prod1.nc
 #trajin prod2.nc
