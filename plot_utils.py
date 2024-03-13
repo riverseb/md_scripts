@@ -65,7 +65,7 @@ def line_multimetric_vs_time(df):
     # plt.xticks(rotation=45) # Only needed if X axis is overlapping
     plt.ylabel("Dihderal (º)", fontsize=20)
     # plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
-    plt.savefig(f"DH1-3_vs_time_multi.png", dpi=300)
+    plt.savefig("DH1-3_vs_time_multi.png", dpi=300)
 def subset_mean_std(df, subset, name):
     """
     Usage: calculates the mean and std for metrics in a subset of the dataframe
@@ -98,6 +98,14 @@ def subset_mean_std(df, subset, name):
     mean_std_df["filt_upper_bound"] = filt_means + filt_stds * 2
     mean_std_df.to_csv(f"{name}_mean_std.csv", sep="\t")
     return mean_std_df
-def scatter_plot(df, x, y, size=None, hue=None):
-    plt.figure(figsize=(6,6))
-    sns.scatterplot(data=df, x=x, y=y, size=size, palette="Set2")
+def scatter_plot(df, x, y, style=None, hue=None):
+    fig = plt.figure(figsize=(8,6))
+    ax = sns.scatterplot(data=df, x=x, y=y, style=style, hue=hue, palette="Set2", legend="brief")
+    ax.set_xlabel(x, fontsize=20)
+    ax.set_ylabel(y, fontsize=20)
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    ax.legend(loc="upper left", bbox_to_anchor=(1, 1))
+    ax.set_title(f'{x} vs {y}', fontsize=25)
+    ax.tick_params(axis='both', which='major', labelsize=15)
+    plt.savefig(f'{x} vs {y}.png', dpi=300)
