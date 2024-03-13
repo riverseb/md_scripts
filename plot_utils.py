@@ -66,4 +66,18 @@ def line_multimetric_vs_time(df):
     plt.ylabel("Dihderal (º)", fontsize=20)
     # plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
     plt.savefig(f"DH1-3_vs_time_multi.png", dpi=300)
-
+def subset_mean_std(df, subset, name):
+    start, stop = subset.split(",")
+    start = int(start)
+    stop = int(stop)
+    start = start * 20
+    stop = stop * 20
+    mean_array = df[start:stop].mean()
+    std_array = df[start:stop].std()
+    mean_std_df = mean_array.to_frame(name="mean")
+    mean_std_df["std"] = std_array
+    mean_std_df.to_csv(f"{name}_mean_std.csv", sep="\t")
+    return mean_std_df
+def scatter_plot(df, x, y, size=None, hue=None):
+    plt.figure(figsize=(6,6))
+    sns.scatterplot(data=df, x=x, y=y, size=size, palette="Set2")
