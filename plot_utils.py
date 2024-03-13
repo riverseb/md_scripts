@@ -67,15 +67,35 @@ def line_multimetric_vs_time(df):
     # plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
     plt.savefig(f"DH1-3_vs_time_multi.png", dpi=300)
 def subset_mean_std(df, subset, name):
+    """
+    Usage: calculates the mean and std for metrics in a subset of the dataframe
+
+    :param df: dataframe
+    :param subset: subset of the dataframe
+    :param name: name of the subset
+    """
     start, stop = subset.split(",")
     start = int(start)
     stop = int(stop)
-    start = start * 20
-    stop = stop * 20
-    mean_array = df[start:stop].mean()
-    std_array = df[start:stop].std()
+    start = start * 20 # converts time to index
+    stop = stop * 20 # converts time to index
+    df_subset = df[start:stop]
+    mean_array = df_subset.mean()
+    std_array = df_subset.std()
+    # calculate lower and upper bounds
+    lower_bound = mean_array - std_array * 2 
+    upper_bound = mean_array + std_array * 2
+    df_filtered_subset = df_subset[(df_subset >= lower_bound) & (df_subset <= upper_bound)] # filter out outliers
+    filt_means = df_filtered_subset.mean()
+    filt_stds = df_filtered_subset.std()
     mean_std_df = mean_array.to_frame(name="mean")
     mean_std_df["std"] = std_array
+    mean_std_df["lower_bound"] = lower_bound
+    mean_std_df["upper_bound"] = upper_bound
+    mean_std_df["filt_mean"] = filt_means
+    mean_std_df["filt_std"] = filt_stds
+    mean_std_df["filt_lower_bound"] = filt_means - filt_stds * 2
+    mean_std_df["filt_upper_bound"] = filt_means + filt_stds * 2
     mean_std_df.to_csv(f"{name}_mean_std.csv", sep="\t")
     return mean_std_df
 def scatter_plot(df, x, y, size=None, hue=None):
