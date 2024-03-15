@@ -41,16 +41,15 @@ def scatter3d_plot(df, x, y, z, c=None):
     fig.savefig(f'{x} vs {y} vs {z}.png', dpi=300)
 
 # create line plot for a single metric vs time w/ matplotlib
-def metric_vs_time(df, column):
+def metric_vs_time(df, column, ymin=0, ymax=380):
     plt.figure(figsize=(6,6))
     df_offset = df.iloc[::5]
-    plt.plot(df_offset["Frame"], df_offset[column], marker='o', linestyle='-', color='black',
-             markersize=4, markerfacecolor="mediumpurple", linewidth=1)
-    plt.xlabel("Time (ns)")
-    # plt.legend(fontsize=15)
-    plt.xticks(rotation=45) # Only needed if X axis is overlapping
-    plt.ylabel("DH1")
-    plt.ylim(0, 380)  # Force y-axis to be from 200 to -200
+    ax = sns.lineplot(data=df, x="Frame", y=column)
+    plt.xlabel("Time (ns)", fontsize=15)
+    plt.ylabel("DH1", fontsize=15)
+    plt.tick_params(labelsize=15)
+    plt.title(f"{column} vs Time", fontsize=20, pad=10)
+    plt.ylim(ymin, ymax)  # Force y-axis to be from ymin to ymax
     plt.savefig(f"{column}_vs_time.png", dpi=300)
 # create line plot for multiple metrics vs time w/ matplotlib and seaborn
 def line_multimetric_vs_time(df):
