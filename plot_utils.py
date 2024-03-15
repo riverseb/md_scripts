@@ -46,7 +46,7 @@ def metric_vs_time(df, column, ymin=0, ymax=380):
     df_offset = df.iloc[::5]
     ax = sns.lineplot(data=df, x="Frame", y=column)
     plt.xlabel("Time (ns)", fontsize=15)
-    plt.ylabel("DH1", fontsize=15)
+    plt.ylabel(f"{column}", fontsize=15)
     plt.tick_params(labelsize=15)
     plt.title(f"{column} vs Time", fontsize=20, pad=10)
     plt.ylim(ymin, ymax)  # Force y-axis to be from ymin to ymax
