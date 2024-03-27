@@ -104,16 +104,19 @@ def scatter_plot(df, x, y, style=None, hue=None):
                         legend="brief", hue_order=["\u03B1-anti", "\u03B1-syn", "unprod_conf1", "unprod_conf2", "Other"],
                         style_order=["\u03B1-anti", "\u03B1-syn", "unprod_conf1", "unprod_conf2", "Other"])
     label_counts = df[hue].value_counts()
-    print(label_counts)
+    # print(label_counts)
     ax.set_xlabel(x, fontsize=20)
     ax.set_ylabel(y, fontsize=20)
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-    ax.legend(labels=["\u03B1-anti n={})".format(label_counts['\u03B1-anti']), 
+    handles, labels = ax.get_legend_handles_labels()
+    # ax.legend(loc="upper left", bbox_to_anchor=(1, 1), title='Conformation')
+    ax.legend(handles=handles, labels=["\u03B1-anti (n={})".format(label_counts['\u03B1-anti']), 
                       "\u03B1-syn (n={})".format(label_counts['\u03B1-syn']), 
                       "unprod_conf1 (n={})".format(label_counts['unprod_conf1']), 
                       "unprod_conf2 (n={})".format(label_counts['unprod_conf2']), 
-                      "Other (n={})".format(label_counts['Other'])],loc="upper left", bbox_to_anchor=(1, 1))
+                      "Other (n={})".format(label_counts['Other'])],loc="upper left", 
+                      bbox_to_anchor=(1, 1), title='Conformation')
     ax.set_title(f'{x} vs {y}', fontsize=25)
     ax.tick_params(axis='both', which='major', labelsize=15)
     plt.savefig(f'{x} vs {y}.png', dpi=300)
